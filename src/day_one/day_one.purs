@@ -1,22 +1,20 @@
-module DayOne where
+module AoC.DayOne where
 
 import Prelude
 import Effect (Effect)
 import Effect.Console (log)
 import Data.Foldable (foldl)
-import Data.Int (fromString)
-import Data.String (split)
-import Data.Maybe (maybe)
 import Node.Encoding (Encoding(UTF8))
 import Node.FS.Sync (readTextFile)
-import Data.String.Pattern (Pattern(..))
+
+import AoC.Util (parseInput)
 
 -- import Debug.Trace (trace)
 
 dayOne :: Effect Unit
 dayOne = do
   -- I think this is the right way to do this since I use it multiple places
-  text <- readTextFile UTF8 "./src/input.txt"
+  text <- readTextFile UTF8 "./src/day_one/input.txt"
   -- -- -- --
   -- next two lines let me read all the files in the current directory.
   -- I could also probably do this as one line: `log $ foldl (\acc a -> acc <> a) "" $ readdir "."`
@@ -31,8 +29,8 @@ dayOne = do
   -- Advent of Code practice cases.  Day 2 right now
   -- log $ foldl (\acc str -> acc <> str <> "  ") "" $ map show $ map (fuelWeight 0) $ map fuel [12, 14, 1969, 100756] 
   -- -- -- --
-  log $ ("Part 1: " <> _) $ show $ sumFuel $ map fuel $  convertLinesToIntArray text
-  log $ ("Part 2: " <> _) $ show $ sumFuel $ map (fuelWeight 0) $ map fuel $ convertLinesToIntArray text
+  log $ ("Part 1: " <> _) $ show $ sumFuel $ map fuel $ parseInput "\n" text
+  log $ ("Part 2: " <> _) $ show $ sumFuel $ map (fuelWeight 0) $ map fuel $ parseInput "\n" text
 
 -- | sums the entire array
 sumFuel :: Array Int -> Int
@@ -56,12 +54,3 @@ fuel mass | mass > 0  = subtractTwo $ div mass 3
 -- | subtract two from any number, because I was playing around with making functions
 subtractTwo :: Int -> Int
 subtractTwo = (_ - 2)
-
--- | converts the input file into an array of integers (split by new line)
-convertLinesToIntArray :: String -> Array Int
-convertLinesToIntArray str = map toMass $ split (Pattern "\n") str
-
--- converts the mass string to an integer, setting it to zero if it isn't a number
--- (I have a feeling the last line is returning Nothing)
-toMass :: String -> Int
-toMass x = maybe 0 identity $ fromString x
