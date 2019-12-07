@@ -1,10 +1,10 @@
 module AoC.DayTwo where
   
 -- import Prelude
-import Prelude (($), (<>), (+), (*), show, Unit, bind, map, identity, pure)
+import Prelude (($), (<>), (+), (*), show, Unit, bind, discard, map, pure, identity)
 import Data.Array (updateAt, drop, index)
 import Data.Foldable (foldl)
-import Data.Maybe (maybe, Maybe)
+import Data.Maybe (maybe, Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Encoding (Encoding(UTF8))
@@ -17,31 +17,28 @@ import AoC.Util (parseInput)
 dayTwo :: Effect Unit
 dayTwo = do
     text <- readTextFile UTF8 "./src/day_two/input.txt"
-    log $ output $ checkOp $ parseInput "," "1,0,0,0,99"
+    -- log $ output $ maybe [] identity $ checkOp $ parseInput "," "1,0,0,0,99"
+    log $ output $ startCode $ parseInput "," "1,0,0,0,99"
+    log $ output $ startCode $ parseInput "," "2,3,0,3,99"
+    log $ output $ startCode $ parseInput "," "2,4,4,5,99,0"
+    log $ output $ startCode $ parseInput "," "1,1,1,4,99,5,6,0,99"
     -- log $ foldl (\acc a -> acc <> a <> " ") "" $ map show $ startCode $ parseInput "," text
 
 output :: Array Int -> String
 output inarr = foldl (\acc a -> acc <> a <> " ") "" $ map show inarr
 
-checkOp :: Array Int -> Array Int
-checkOp arr = do
-  check <- operation arr arr
-  check
+checkOp :: Array Int -> Maybe (Array Int)
+checkOp arr = operation arr arr
 
 startCode :: Array Int -> Array Int
-startCode input = readOps input input
+startCode input = readOps (pure input) input
 
-readOps :: Array Int -> Array Int -> Array Int
-readOps allCode [99, _] = allCode
-readOps allCode curOp@[code, pos1, pos2, updatePos, _] = do
-    -- op1 <- index allCode pos1
-    -- op2 <- index allCode pos2
-    -- newAllCode <- updateAt updatePos (opCode code op1 op2) allCode
-    newAllCode <- operation allCode curOp
-    readOps newAllCode (drop 4 curOp)
-readOps allCode curOp = allCode
+readOps :: Maybe (Array Int) -> Array Int -> Array Int
+readOps (Just allCode) [99, _] = allCode
+readOps (Just allCode) curOp@[code, pos1, pos2, updatePos, _] = readOps (operation allCode curOp) (drop 4 curOp)
+readOps (Just allCode) _ = allCode
+readOps Nothing _ = []
     
-    -- trace (output allCode <> output curOp) (\_ -> readOps (operation allCode curOp) (drop 4 curOp))
 
 operation :: Array Int -> Array Int -> Maybe (Array Int)
 operation allCode curOp@[code, pos1, pos2, updatePos, _] = do 
@@ -50,8 +47,8 @@ operation allCode curOp@[code, pos1, pos2, updatePos, _] = do
     updateAt updatePos (opCode code op1 op2) allCode
 operation allCode _ = pure allCode
 
-getIndex :: Array Int -> Int -> Int
-getIndex allCode idx = maybe 0 identity $ index idx allCode
+-- getIndex :: Array Int -> Int -> Int
+-- getIndex allCode idx = maybe 0 identity $ index idx allCode
 
 opCode :: Int -> Int -> Int -> Int
 opCode 1 x y = x + y
