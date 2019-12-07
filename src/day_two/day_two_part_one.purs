@@ -22,6 +22,9 @@ dayTwo = do
     log $ output $ startCode $ parseInput "," "2,3,0,3,99"
     log $ output $ startCode $ parseInput "," "2,4,4,5,99,0"
     log $ output $ startCode $ parseInput "," "1,1,1,4,99,5,6,0,99"
+    log "-------------"
+    log text
+    log "-------------"
     log $ foldl (\acc a -> acc <> a <> " ") "" $ map show $ startCode $ parseInput "," text
 
 output :: Array Int -> String
@@ -30,15 +33,16 @@ output inarr = foldl (\acc a -> acc <> a <> " ") "" $ map show inarr
 checkOp :: Array Int -> Maybe (Array Int)
 checkOp arr = operation arr arr
 
+-- called to start the recursuve function
 startCode :: Array Int -> Array Int
 startCode input = newReadOps (pure input) 0
 
+-- the recursive function, there's a lot I don't understand happening here
 newReadOps :: Maybe (Array Int) -> Int -> Array Int
 newReadOps (Just allCode) opIdx =
   case code of
     99 -> allCode
-    -- Nothing -> allCode
-    _ -> newReadOps (operation allCode [code, op1, op2, updatePos]) (opIdx + 4)
+    _ -> trace ("indices: " <> output [code, op1, op2, updatePos]) \_ -> newReadOps (operation allCode [code, op1, op2, updatePos]) (opIdx + 4)
   where
     code :: Int
     code = maybe 0 identity $ index allCode opIdx 
@@ -50,13 +54,15 @@ newReadOps (Just allCode) opIdx =
     updatePos = maybe 0 identity $ index allCode (opIdx + 3)
 newReadOps Nothing _ = []
 
+-- do notation works well here because it's all a big maybe...
 operation :: Array Int -> Array Int -> Maybe (Array Int)
 operation allCode curOp@[code, pos1, pos2, updatePos] = do 
     op1 <- index allCode pos1
     op2 <- index allCode pos2
-    updateAt updatePos (opCode code op1 op2) allCode
+    trace ("operation: " <> show op1 <> " " <> show op2) \_ -> updateAt updatePos (opCode code op1 op2) allCode
 operation allCode _ = pure allCode
 
+-- should I use Maybe's here?
 opCode :: Int -> Int -> Int -> Int
 opCode 1 y z = y + z
 opCode 2 y z = y * z
