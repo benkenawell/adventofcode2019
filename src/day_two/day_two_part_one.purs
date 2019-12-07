@@ -22,7 +22,7 @@ dayTwo = do
     log $ output $ startCode $ parseInput "," "2,3,0,3,99"
     log $ output $ startCode $ parseInput "," "2,4,4,5,99,0"
     log $ output $ startCode $ parseInput "," "1,1,1,4,99,5,6,0,99"
-    -- log $ foldl (\acc a -> acc <> a <> " ") "" $ map show $ startCode $ parseInput "," text
+    log $ foldl (\acc a -> acc <> a <> " ") "" $ map show $ startCode $ parseInput "," text
 
 output :: Array Int -> String
 output inarr = foldl (\acc a -> acc <> a <> " ") "" $ map show inarr
@@ -31,18 +31,24 @@ checkOp :: Array Int -> Maybe (Array Int)
 checkOp arr = operation arr arr
 
 startCode :: Array Int -> Array Int
-startCode input = readOps (pure input) (take 4 input) (drop 4 input)
+startCode input = newReadOps (pure input) 0
 
-readOps :: Maybe (Array Int) -> Array Int -> Array Int -> Array Int
-readOps (Just allCode) curOp@[99, _, _, _] _ = trace ("ending... " <> output curOp <> output allCode) \_ -> allCode -- if there are still more terms, match this one
-readOps (Just allCode) curOp@[99, _, _] _ = trace ("ending... " <> output curOp <> output allCode) \_ -> allCode -- if there are still more terms, match this one
-readOps (Just allCode) curOp@[99, _] _ = trace ("ending... " <> output curOp <> output allCode) \_ -> allCode -- if there are still more terms, match this one
-readOps (Just allCode) curOp@[99] _ = trace ("ending... " <> output curOp <> output allCode) \_ -> allCode -- if there aren't more terms, match this one
--- the below line doesn't work because purescript doesn't allow pattern matching on variable length arrays
-readOps (Just allCode) curOp@[code, pos1, pos2, updatePos] nextOps = trace ("step: " <> (output curOp)) \_ -> readOps (operation allCode curOp) (take 4 nextOps) (drop 4 nextOps)
-readOps (Just allCode) arr _ = trace ("fell through: " <> (output arr)) \_ -> allCode
-readOps Nothing _ _ = trace "nothing" \_ -> []
-    
+newReadOps :: Maybe (Array Int) -> Int -> Array Int
+newReadOps (Just allCode) opIdx =
+  case code of
+    99 -> allCode
+    -- Nothing -> allCode
+    _ -> newReadOps (operation allCode [code, op1, op2, updatePos]) (opIdx + 4)
+  where
+    code :: Int
+    code = maybe 0 identity $ index allCode opIdx 
+    op1 :: Int
+    op1 = maybe 0 identity $ index allCode (opIdx + 1)
+    op2 :: Int
+    op2 = maybe 0 identity $ index allCode (opIdx + 2)
+    updatePos :: Int
+    updatePos = maybe 0 identity $ index allCode (opIdx + 3)
+newReadOps Nothing _ = []
 
 operation :: Array Int -> Array Int -> Maybe (Array Int)
 operation allCode curOp@[code, pos1, pos2, updatePos] = do 
