@@ -12,7 +12,7 @@ import Node.FS.Sync (readTextFile)
 
 import AoC.Util (parseInput)
 
--- import Debug.Trace (trace)
+import Debug.Trace (trace)
 
 dayTwo :: Effect Unit
 dayTwo = do
@@ -34,10 +34,10 @@ startCode :: Array Int -> Array Int
 startCode input = readOps (pure input) input
 
 readOps :: Maybe (Array Int) -> Array Int -> Array Int
-readOps (Just allCode) [99, _] = allCode
-readOps (Just allCode) curOp@[code, pos1, pos2, updatePos, _] = readOps (operation allCode curOp) (drop 4 curOp)
-readOps (Just allCode) _ = allCode
-readOps Nothing _ = []
+readOps (Just allCode) [99, _] = trace ("ending...") \_ -> allCode
+readOps (Just allCode) curOp@[code, pos1, pos2, updatePos, _] = trace ("step: " <> (output curOp)) \_ -> readOps (operation allCode curOp) (drop 4 curOp)
+readOps (Just allCode) _ = trace "fell through" \_ -> allCode
+readOps Nothing _ = trace "nothing" \_ -> []
     
 
 operation :: Array Int -> Array Int -> Maybe (Array Int)
