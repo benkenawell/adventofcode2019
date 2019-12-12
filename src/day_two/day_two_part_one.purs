@@ -1,7 +1,7 @@
 module AoC.DayTwo where
   
 -- import Prelude
-import Prelude (($), (<>), (+), (*), show, Unit, bind, discard, map, pure, identity)
+import Prelude (($), (<>), (+), (*), (<<<), show, Unit, bind, discard, map, pure, identity)
 import Data.Array (updateAt, drop, index, take)
 import Data.Foldable (foldl)
 import Data.Maybe (maybe, Maybe(..))
@@ -18,20 +18,17 @@ dayTwo :: Effect Unit
 dayTwo = do
     text <- readTextFile UTF8 "./src/day_two/input.txt"
     -- log $ output $ maybe [] identity $ checkOp $ parseInput "," "1,0,0,0,99"
-    log $ output $ startCode $ parseInput "," "1,0,0,0,99"
+    log $ show $ startCode $ parseInput "," "1,0,0,0,99"
     log $ output $ startCode $ parseInput "," "2,3,0,3,99"
     log $ output $ startCode $ parseInput "," "2,4,4,5,99,0"
     log $ output $ startCode $ parseInput "," "1,1,1,4,99,5,6,0,99"
     log "-------------"
     log text
     log "-------------"
-    log $ foldl (\acc a -> acc <> a <> " ") "" $ map show $ startCode $ parseInput "," text
+    log $ output $ startCode $ parseInput "," text
 
 output :: Array Int -> String
 output inarr = foldl (\acc a -> acc <> a <> " ") "" $ map show inarr
-
-checkOp :: Array Int -> Maybe (Array Int)
-checkOp arr = operation arr arr
 
 -- called to start the recursuve function
 startCode :: Array Int -> Array Int
@@ -66,4 +63,4 @@ operation allCode _ = pure allCode
 opCode :: Int -> Int -> Int -> Int
 opCode 1 y z = y + z
 opCode 2 y z = y * z
-opCode x y z = 0
+opCode x y z = trace ("hit here") \_ -> 0
