@@ -4,6 +4,19 @@ This year I am taking this opportunity to learn more about the functional progra
 
 Although I have begun to use functional concepts in my day to day programming, it is in Typescript.  So starting Purescript has still taken me a couple days to get a project up and running.  I have been learning terminology, skimming past other terminology, and learning to read type signatures, which seems paramount to a working understanding of the funcitonal paradigm.  All this learning, and not enough time in the day, leaves me a few days behind the advent calendar.  I expect this will be true the entire season, but I have learned enough in the first day (which actually took me several days) to make this trade off feel worth it moving forward.
 
+---
+
+### Dec 11 update
+
+After hitting a wall with purescript typings, I have decided to move to FSharp.  Here are a couple of reasons I think this is a good transition:
+- It has all the clout of the .NET environment
+- it is statically typed, but does type inferences.  I don't have to worry about mistyping functions (which I realized I did a few times, especially with the `do` keyword in purescript).  But I still get some static type checking
+- better documentation.  Maybe this is a matter of preference/what I'm used to, but I found the [F# language reference](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/) to be much more thorough than [purescript's](https://github.com/purescript/documentation/blob/master/language/Syntax.md).  I found module references had actual example too, in addition to type signatures.  Type signatures are great once you get to read them, especially in Purescript, but without examples when I couldn't figure out a type signature there was no help.  Import are a tad more obvious to me in F# as well, but I was getting better at them in purescript (so I'll leave this as a what-I-know bias). Chances are better googling will give me quicker answers too, since more people use F#.
+
+If you have better tutorials or documentation for purescript, (or even Haskell, really. I might get there someday) I'd love to hear it!  Drop it as an issue maybe?  Or fork this repo and PR it into the README?  Or just post it to [r/functionalprogramming](https://www.reddit.com/r/functionalprogramming)
+
+My plan is to use the `fsharpi`, or the interpretive shell, found in the fsharp docker container.  I don't need a whole F# project for advent of code. Although I don't know if that will affect my ability to pull out functions I use everyday into a different module (like I began with purescript). 
+
 ## Learnings
 
 If I find time I may go more in depth about what each of these learning are, but it will just start with a list of learnings
@@ -17,3 +30,10 @@ If I find time I may go more in depth about what each of these learning are, but
 - Effect Monad, although I don't fully understand how it works, I understand it has to do with side effects
 - the `$` operator (I believe it's apply?)
   - I want to understand this operator better though, because it clearly isn't function composition.  But I can't find a function composition operator anywhere in the language.
+
+### Day 2
+
+- Type signatures are hard!  And I don't understand syntatic sugar like `do`
+- or it might be I don't understand `bind`, and what it has to do with Monads
+- Maybe maybe Maybe maybe Maybe.... How do I effectively work with this type?  It's killing me
+- I actually did get me code running for today, it's just not right.  And after days fixing my types and type signatures, I'm giving up.  I'm so many days behind and it's taking too much of my time outside of work.  I don't want to be behind a computer this long!
