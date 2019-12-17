@@ -37,3 +37,7 @@ If I find time I may go more in depth about what each of these learning are, but
 - or it might be I don't understand `bind`, and what it has to do with Monads
 - Maybe maybe Maybe maybe Maybe.... How do I effectively work with this type?  It's killing me
 - I actually did get me code running for today, it's just not right.  And after days fixing my types and type signatures, I'm giving up.  I'm so many days behind and it's taking too much of my time outside of work.  I don't want to be behind a computer this long!
+
+#### Day 2 Part 2
+
+I feel pretty good about how I was able to leverage the code I did from part 1.  However, I dislike using looping like I have done.  This is not exactly a functional way to solve this problem, and I'm not even breaking out of the loop when I find the right answer.  However, it works and for now that is going to be enough.
